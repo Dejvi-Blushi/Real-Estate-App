@@ -20,7 +20,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "T&T Group",
+  title: "T&T Real Estate",
   description:
     "Discover your perfect property in Albania. Browse our curated listings for apartments, villas, and commercial real estate for sale and rent in many Albanian cities."
 };
