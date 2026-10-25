@@ -134,7 +134,12 @@
     cursor: pointer;
   }
 }
+
 .leaflet-bottom,
-.leaflet-right {
+.leaflet-right,
+.cl-userButtonPopoverFooter 🔒️,
+.cl-internal-1n0t203,
+.cl-footerItem 🔒️,
+.cl-internal-r93pb5 {
   display: none !important;
 }
