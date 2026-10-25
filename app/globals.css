@@ -135,10 +135,6 @@
   }
 }
 .leaflet-bottom,
-.leaflet-right,
-.cl-userButtonPopoverFooter 🔒️,
-.cl-internal-1n0t203,
-.cl-footerItem 🔒️,
-.cl-internal-r93pb5 {
+.leaflet-right {
   display: none !important;
 }
