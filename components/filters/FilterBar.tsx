@@ -1,89 +1,157 @@
-import Link from "next/link";
+"use client";
 
-import {Button, buttonVariants} from "@/components/ui/button";
+import {useState} from "react";
+import {Button} from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from "@/components/ui/select";
+
 import {cities} from "@/lib/constants";
 import {propertyTypes} from "@/lib/constants";
-import {cn} from "@/lib/utils";
+import {useSearchParams, useRouter, usePathname} from "next/navigation";
 
-type FilterBarProps = {
-  searchParams?: Partial<Filters>;
-};
+export default function FilterBar() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
 
-const selectClassName =
-  "h-10 w-32 rounded-md border border-input bg-transparent px-2.5 text-xs shadow-xs outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 dark:bg-input/30";
+  const defaultFilters = {
+    propertyType: searchParams.get("propertyType") ?? "Any",
+    city: searchParams.get("city") ?? "Any",
+    bedrooms: searchParams.get("bedrooms") ?? "Any",
+    bathrooms: searchParams.get("bathrooms") ?? "Any"
+  };
 
-export default function FilterBar({searchParams}: FilterBarProps) {
+  const [filters, setFilters] = useState<Filters>(defaultFilters);
+
+  function updateFilter(key: keyof Filters, value: string) {
+    setFilters((prev) => ({...prev, [key]: value}));
+  }
+
+  function handleSubmit() {
+    const params = new URLSearchParams();
+
+    if (filters.propertyType !== "Any")
+      params.set("propertyType", filters.propertyType);
+
+    if (filters.city !== "Any") params.set("city", filters.city);
+    if (filters.bedrooms !== "Any") params.set("bedrooms", filters.bedrooms);
+    if (filters.bathrooms !== "Any") params.set("bathrooms", filters.bathrooms);
+
+    router.push(`${pathname}?${params.toString()}`);
+  }
+
+  function clearFilters() {
+    setFilters({
+      propertyType: "Any",
+      city: "Any",
+      bedrooms: "Any",
+      bathrooms: "Any"
+    });
+
+    router.push(`${pathname}`);
+  }
+
   return (
-    <form
-      method="get"
-      className="flex flex-wrap gap-2 p-3 justify-center items-center border-b-2 border-solid"
-    >
-      <select
-        name="city"
-        defaultValue={searchParams?.city ?? ""}
-        className={selectClassName}
+    <div className="flex flex-wrap gap-2 p-3 justify-center items-center border-b-2 border-solid">
+      <Select
+        value={filters.city}
+        onValueChange={(val) => updateFilter("city", val)}
       >
-        <option value="">Any</option>
-        {cities.map((city) => (
-          <option key={city.value} value={city.value}>
-            {city.value}
-          </option>
-        ))}
-      </select>
+        <SelectTrigger className="w-32 h-10 text-xs">
+          <SelectValue placeholder="City" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            <SelectItem key={"Any"} value={"Any"}>
+              Any
+            </SelectItem>
+            {cities.map((city) => (
+              <SelectItem key={city.value} value={city.value}>
+                {city.value}
+              </SelectItem>
+            ))}
+          </SelectGroup>
+        </SelectContent>
+      </Select>
 
-      <select
-        name="propertyType"
-        defaultValue={searchParams?.propertyType ?? ""}
-        className={selectClassName}
+      <Select
+        value={filters.propertyType}
+        onValueChange={(val) => updateFilter("propertyType", val)}
       >
-        <option value="">Any</option>
-        {propertyTypes.map((item) => (
-          <option key={item.value} value={item.value}>
-            {item.value}
-          </option>
-        ))}
-      </select>
+        <SelectTrigger className="w-32 h-10 text-xs">
+          <SelectValue placeholder="Property Type" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            <SelectItem key={"Any"} value={"Any"}>
+              Any
+            </SelectItem>
+            {propertyTypes.map((item) => (
+              <SelectItem key={item.value} value={item.value}>
+                {item.value}
+              </SelectItem>
+            ))}
+          </SelectGroup>
+        </SelectContent>
+      </Select>
 
-      <select
-        name="bedrooms"
-        defaultValue={searchParams?.bedrooms ?? ""}
-        className={selectClassName}
+      <Select
+        value={filters.bedrooms?.toString()}
+        onValueChange={(val) => updateFilter("bedrooms", val)}
       >
-        <option value="">Any</option>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
-          <option key={n} value={n.toString()}>
-            {n}+ Bedrooms
-          </option>
-        ))}
-      </select>
+        <SelectTrigger className="w-32 h-10 text-xs">
+          <SelectValue placeholder="Bedrooms" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem key={"Any"} value={"Any"}>
+            Any
+          </SelectItem>
+          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
+            <SelectItem key={n} value={n.toString()}>
+              {n}+ Bedrooms
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
 
-      <select
-        name="bathrooms"
-        defaultValue={searchParams?.bathrooms ?? ""}
-        className={selectClassName}
+      <Select
+        value={filters.bathrooms?.toString()}
+        onValueChange={(val) => updateFilter("bathrooms", val)}
       >
-        <option value="">Any</option>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
-          <option key={n} value={n.toString()}>
-            {n}+ Bathrooms
-          </option>
-        ))}
-      </select>
+        <SelectTrigger className="w-32 h-10 text-xs">
+          <SelectValue placeholder="Bathrooms" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem key={"Any"} value={"Any"}>
+            Any
+          </SelectItem>
+          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
+            <SelectItem key={n} value={n.toString()}>
+              {n}+ Bathrooms
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
 
       <div className="ml-4">
-        <Link
-          href="?"
-          className={cn(
-            buttonVariants({variant: "outline", size: "sm"}),
-            "h-10 text-xs text-neutral-500 mr-2"
-          )}
+        <Button
+          variant="outline"
+          size="sm"
+          className="h-10 text-xs text-neutral-500 mr-2"
+          onClick={clearFilters}
         >
           Clear
-        </Link>
-        <Button type="submit" size="sm" className="h-10 text-xs px-4">
+        </Button>
+        <Button size="sm" className="h-10 text-xs px-4" onClick={handleSubmit}>
           Search
         </Button>
       </div>
-    </form>
+    </div>
   );
 }
