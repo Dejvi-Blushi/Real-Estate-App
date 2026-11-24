@@ -51,7 +51,7 @@ type ListingsMarkers = {
 };
 
 type Filters = {
-  page: string;
+  page?: string;
   city: string;
   propertyType: string;
   bedrooms: string;
