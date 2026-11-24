@@ -1,5 +1,3 @@
-"use client";
-
 import Image from "next/image";
 import {MapPinned, Scan, Bath, Bed, House} from "lucide-react";
 import Link from "next/link";

@@ -1,37 +1,49 @@
-"use client";
-
-import {useRouter, usePathname, useSearchParams} from "next/navigation";
+import Link from "next/link";
 import {Button} from "@/components/ui/button";
 
 type PaginationProps = {
   page: number;
   totalPages: number;
+  searchParams?: Record<string, string | null | undefined>;
 };
 
-export function Pagination({page, totalPages}: PaginationProps) {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
+const pageHref = (
+  newPage: number,
+  searchParams: PaginationProps["searchParams"]
+) => {
+  const params = new URLSearchParams();
 
-  function goToPage(newPage: number) {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("page", String(newPage));
-    router.push(`${pathname}?${params.toString()}`);
-  }
+  Object.entries(searchParams ?? {}).forEach(([key, value]) => {
+    if (value) params.set(key, value);
+  });
 
+  params.set("page", String(newPage));
+
+  return `?${params.toString()}`;
+};
+
+export function Pagination({page, totalPages, searchParams}: PaginationProps) {
   if (totalPages <= 1) return null;
 
   return (
     <div className="flex items-center gap-2 mt-10">
-      <Button disabled={page <= 1} onClick={() => goToPage(page - 1)}>
-        Previous
-      </Button>
+      {page <= 1 ? (
+        <Button disabled>Previous</Button>
+      ) : (
+        <Button asChild>
+          <Link href={pageHref(page - 1, searchParams)}>Previous</Link>
+        </Button>
+      )}
       <span>
         Page {page} of {totalPages}
       </span>
-      <Button disabled={page >= totalPages} onClick={() => goToPage(page + 1)}>
-        Next
-      </Button>
+      {page >= totalPages ? (
+        <Button disabled>Next</Button>
+      ) : (
+        <Button asChild>
+          <Link href={pageHref(page + 1, searchParams)}>Next</Link>
+        </Button>
+      )}
     </div>
   );
 }

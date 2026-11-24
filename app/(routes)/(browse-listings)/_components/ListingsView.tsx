@@ -85,7 +85,11 @@ export default async function ListingsView({
             ))}
           </div>
 
-          <Pagination page={page} totalPages={totalPages} />
+          <Pagination
+            page={page}
+            totalPages={totalPages}
+            searchParams={{propertyType, city, bedrooms, bathrooms}}
+          />
         </div>
       )}
 
