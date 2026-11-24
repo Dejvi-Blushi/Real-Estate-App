@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import type {ListingFetchedData} from "@/types/types";
+import type {ListingFetchedData} from "@/types";
 import {Button} from "../ui/button";
 import {MapPinned, Scan, Bath, Bed, House, Pencil, Trash2} from "lucide-react";
 import {

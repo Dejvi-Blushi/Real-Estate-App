@@ -1,4 +1,4 @@
-export type FormData = {
+type ListingFormData = {
   id: number;
   title: string;
   description: string;
@@ -16,18 +16,18 @@ export type FormData = {
   contact_info: string;
 };
 
-export type ImageFiles = {
+type ImageFiles = {
   images: File[];
 };
 
-export type FullFormData = FormData & ImageFiles;
+type FullFormData = ListingFormData & ImageFiles;
 
-export type MarkerPosition = {
+type MarkerPosition = {
   markerPosition: L.LatLng | null;
 };
 
-export type ListingFetchedData = Pick<
-  FormData,
+type ListingFetchedData = Pick<
+  ListingFormData,
   | "id"
   | "title"
   | "price"
@@ -46,21 +46,31 @@ export type ListingFetchedData = Pick<
   contact_info?: string;
 };
 
-export type ListingsMarkers = {
+type ListingsMarkers = {
   listings: ListingFetchedData[];
 };
 
-export type Filters = {
+type Filters = {
+  page: string;
   city: string;
   propertyType: string;
   bedrooms: string;
   bathrooms: string;
 };
 
-export type ContactData = {
+type ContactData = {
   firstName: string;
   lastName: string;
   email: string;
   phone: string;
   message: string;
+};
+
+type ListingType = "rent" | "sell";
+
+type Coordinates = {lat: number; lng: number};
+
+type MarkerState = {
+  markerPosition?: Coordinates | null;
+  setMarkerPosition?: React.Dispatch<React.SetStateAction<Coordinates | null>>;
 };

@@ -1,3 +1,5 @@
+"use client";
+
 import {useState} from "react";
 import {Button} from "@/components/ui/button";
 import {
@@ -9,9 +11,8 @@ import {
   SelectValue
 } from "@/components/ui/select";
 
-import {cities} from "@/lib/data/cities";
-import type {Filters} from "@/types/types";
-import {propertyTypes} from "@/lib/data/propertyTypes";
+import {cities} from "@/lib/constants";
+import {propertyTypes} from "@/lib/constants";
 import {useSearchParams, useRouter, usePathname} from "next/navigation";
 
 export default function FilterBar() {

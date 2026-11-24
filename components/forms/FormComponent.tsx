@@ -25,26 +25,24 @@ import {
 
 import {Textarea} from "@/components/ui/textarea";
 
-import type {FormData, FullFormData, MarkerPosition} from "@/types/types";
 import {useForm, Controller} from "react-hook-form";
 import {toast} from "sonner";
 
 import {useSupabaseClient} from "@/lib/supabase/client";
 
-import {usePathname} from "next/navigation";
-
 import {useRouter} from "next/navigation";
 import {Upload} from "lucide-react";
 import ImagePreviewGrid from "./ImagePreview";
-import {getDate, randomNumericId} from "@/utils/randomNumericId";
+import {getDate, randomNumericId} from "@/lib/utils/randomNumericId";
 import ListingImageEditor from "./ListingImageEditor";
 import {Card} from "../ui/card";
 
-import {cities} from "@/lib/data/cities";
-import {propertyTypes} from "@/lib/data/propertyTypes";
+import {cities} from "@/lib/constants";
+import {propertyTypes} from "@/lib/constants";
 
-type FetchedData = MarkerPosition & {
-  defaultData?: FormData;
+type FetchedData = {
+  markerPosition: {lat: number; lng: number} | null;
+  defaultData?: ListingFormData;
   listingId?: number;
 };
 
@@ -53,10 +51,6 @@ export default function FormComponent({
   defaultData,
   listingId
 }: FetchedData) {
-  const pathname = usePathname();
-
-  const isEditMode = pathname.startsWith("/edit-listing");
-
   const router = useRouter();
 
   const {
@@ -96,14 +90,14 @@ export default function FormComponent({
 
     const {images, ...listingData} = fullData;
 
-    if (isEditMode && listingId) {
+    if (listingId) {
       await updateData(listingData);
     } else {
       await insertData(images, listingData);
     }
   };
 
-  const insertData = async (images: File[], listingData: FormData) => {
+  const insertData = async (images: File[], listingData: ListingFormData) => {
     try {
       const {data: listing, error} = await supabase
         .from("listings")
@@ -151,7 +145,7 @@ export default function FormComponent({
     }
   };
 
-  const updateData = async (listingData: FormData) => {
+  const updateData = async (listingData: ListingFormData) => {
     try {
       const {error} = await supabase
         .from("listings")
@@ -456,7 +450,7 @@ export default function FormComponent({
         <FieldSet className="mt-5">
           <FieldGroup>
             <div className="flex items-center justify-center w-full">
-              {isEditMode && listingId ? (
+              {listingId ? (
                 <ListingImageEditor listingId={listingId} />
               ) : (
                 <Controller

@@ -1,17 +1,23 @@
 "use client";
 
+import {useState} from "react";
+import MapPickerClient from "./MapPickerClient";
 import FormComponent from "@/components/forms/FormComponent";
 
-import {useState} from "react";
-import dynamic from "next/dynamic";
+type Props = {
+  defaultData?: ListingFormData;
+  listingId?: number;
+  initialPosition?: Coordinates;
+};
 
-const MapPicker = dynamic(() => import("@/components/maps/MapPicker"), {
-  ssr: false,
-  loading: () => <div className="h-[50vh] w-full bg-slate-100 animate-pulse" />
-});
-
-export default function AddListing() {
-  const [markerPosition, setMarkerPosition] = useState<L.LatLng | null>(null);
+export default function ListingFormShell({
+  defaultData,
+  listingId,
+  initialPosition
+}: Props) {
+  const [markerPosition, setMarkerPosition] = useState<Coordinates | null>(
+    initialPosition ?? null
+  );
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 h-full">
@@ -20,7 +26,7 @@ export default function AddListing() {
           Select a location in the map
         </h2>
 
-        <MapPicker
+        <MapPickerClient
           markerPosition={markerPosition}
           setMarkerPosition={setMarkerPosition}
         />
@@ -32,7 +38,11 @@ export default function AddListing() {
         </h2>
 
         <div className="w-full self-end">
-          <FormComponent markerPosition={markerPosition} />
+          <FormComponent
+            markerPosition={markerPosition}
+            defaultData={defaultData}
+            listingId={listingId}
+          />
         </div>
       </div>
     </div>

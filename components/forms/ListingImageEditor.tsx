@@ -5,7 +5,7 @@ import {X, Upload} from "lucide-react";
 import {Button} from "@/components/ui/button";
 import {toast} from "sonner";
 import {useSupabaseClient} from "@/lib/supabase/client";
-import {getDate, randomNumericId} from "@/utils/randomNumericId";
+import {getDate, randomNumericId} from "@/lib/utils/randomNumericId";
 
 import {
   AlertDialog,

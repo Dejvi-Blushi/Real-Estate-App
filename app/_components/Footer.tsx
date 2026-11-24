@@ -1,5 +1,3 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
 
@@ -24,23 +22,38 @@ export default function Footer() {
 
         <div className="flex flex-col gap-4">
           <span className="font-semibold">Listings</span>
-          <Link href="/for-rent" className="text-sm text-gray-400">
+          <Link
+            href="/for-rent"
+            className="text-sm text-gray-400 hover:text-secondary transition-colors duration-100 ease-in-out"
+          >
             For Rent
           </Link>
-          <Link href="/for-sale" className="text-sm text-gray-400">
+          <Link
+            href="/for-sale"
+            className="text-sm text-gray-400 hover:text-secondary transition-colors duration-100 ease-in-out"
+          >
             For Sale
           </Link>
-          <Link href="/add-listing" className="text-sm text-gray-400">
+          <Link
+            href="/add-listing"
+            className="text-sm text-gray-400 hover:text-secondary transition-colors duration-100 ease-in-out"
+          >
             List Your Property
           </Link>
         </div>
 
         <div className="flex flex-col gap-4">
           <span className="font-semibold">Company</span>
-          <Link href="/" className="text-sm text-gray-400">
+          <Link
+            href="/"
+            className="text-sm text-gray-400 hover:text-secondary transition-colors duration-100 ease-in-out"
+          >
             Home
           </Link>
-          <Link href="/contact" className="text-sm text-gray-400">
+          <Link
+            href="/contact"
+            className="text-sm text-gray-400 hover:text-secondary transition-colors duration-100 ease-in-out"
+          >
             Contact
           </Link>
         </div>

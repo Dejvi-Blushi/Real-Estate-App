@@ -7,8 +7,6 @@ import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 import {Textarea} from "@/components/ui/textarea";
 import {Field, FieldError, FieldLabel} from "@/components/ui/field";
-import {ContactData} from "@/types/types";
-
 import {sendContactMessage} from "@/app/actions/contact";
 import {toast} from "sonner";
 

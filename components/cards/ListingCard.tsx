@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import type {ListingFetchedData} from "@/types/types";
+import type {ListingFetchedData} from "@/types";
 import {MapPinned, Scan, Bath, Bed, House} from "lucide-react";
 import Link from "next/link";
 

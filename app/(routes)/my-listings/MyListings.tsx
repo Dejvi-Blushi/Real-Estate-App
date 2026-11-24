@@ -1,74 +1,32 @@
 "use client";
 
-import {useState, useEffect} from "react";
-import {useUser} from "@clerk/nextjs";
-import {useSupabaseClient} from "@/lib/supabase/client";
-import UserListing from "@/components/cards/UserListing";
+import {useRouter} from "next/navigation";
 import {toast} from "sonner";
-import type {ListingFetchedData} from "@/types/types";
-import {Card} from "@/components/ui/card";
-import {maxListingsPerPage} from "@/lib/data/maxListingsPerPage";
-import {Pagination} from "@/components/cards/Pagination";
 
-export default function MyListings({page}: {page: number}) {
-  const {user, isLoaded} = useUser();
+import ListingsError from "@/components/errors/ListingsError";
+import UserListing from "@/components/cards/UserListing";
+import {Pagination} from "@/components/cards/Pagination";
+import {Card} from "@/components/ui/card";
+import {maxListingsPerPage} from "@/lib/constants";
+import {useSupabaseClient} from "@/lib/supabase/client";
+
+type Props = {
+  listings: ListingFetchedData[];
+  totalCount: number;
+  page: number;
+  fetchFailed?: boolean;
+};
+
+export default function MyListings({
+  listings,
+  totalCount,
+  page,
+  fetchFailed = false
+}: Props) {
+  const router = useRouter();
   const supabase = useSupabaseClient();
 
-  const [listings, setListings] = useState<ListingFetchedData[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-
-  const [totalCount, setTotalCount] = useState<number>(0);
-
   const totalPages = Math.ceil(totalCount / maxListingsPerPage);
-
-  async function fetchMyListings() {
-    const from = (page - 1) * maxListingsPerPage;
-    const to = from + maxListingsPerPage - 1;
-
-    try {
-      const {data, count, error} = await supabase
-        .from("listings")
-        .select(
-          `id, title, price, bedrooms, property_type, listing_type, bathrooms, latitude, longtitude, address, city, area_size, listing_images ( path )`,
-          {count: "exact"}
-        )
-        .eq("user_id", user?.id)
-        .eq("listing_images.position", 0)
-        .order("created_at", {ascending: false})
-        .range(from, to);
-
-      if (error) {
-        setIsLoading(false);
-
-        throw new Error(
-          "An error occurred fetching listings. Please try again."
-        );
-      }
-
-      const listingsWithUrls = data.map((listing) => ({
-        ...listing,
-        listing_images: listing.listing_images.map((img) => ({
-          ...img,
-          path: supabase.storage.from("listing-images").getPublicUrl(img.path)
-            .data.publicUrl
-        }))
-      }));
-
-      setListings(listingsWithUrls);
-      setTotalCount(count ?? 0);
-
-      setIsLoading(false);
-    } catch {
-      toast("An error occurred fetching your listings. Please try again.");
-    }
-  }
-
-  useEffect(() => {
-    if (isLoaded) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      fetchMyListings();
-    }
-  }, [isLoaded, page]);
 
   async function handleDelete(id: number) {
     try {
@@ -117,7 +75,7 @@ export default function MyListings({page}: {page: number}) {
 
       toast("Listing deleted successfully.");
 
-      await fetchMyListings();
+      router.refresh();
     } catch {
       toast("An error occurred deleting the listing. Please try again.");
     }
@@ -127,8 +85,8 @@ export default function MyListings({page}: {page: number}) {
     <div className="pt-4 pb-8 px-6 md:px-13">
       <h1 className="text-2xl font-bold mb-4">My Listings</h1>
 
-      {isLoading ? (
-        <p>Loading listings...</p>
+      {fetchFailed ? (
+        <ListingsError />
       ) : listings.length === 0 ? (
         <p>No listings have been found.</p>
       ) : (

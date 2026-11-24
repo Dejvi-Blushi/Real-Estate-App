@@ -1,13 +1,12 @@
-"use client";
-
 import {Button} from "@/components/ui/button";
 import {Separator} from "@/components/ui/separator";
 import Image from "next/image";
 import NavLinks from "./NavLinks";
 import Link from "next/link";
-import {UserButton, useUser} from "@clerk/nextjs";
+import UserMenu from "./UserMenu";
+import {Show} from "@clerk/nextjs";
 
-import {Menu, Plus, Building, X} from "lucide-react";
+import {Menu, Plus, X} from "lucide-react";
 
 import {
   Sheet,
@@ -19,8 +18,6 @@ import {
 } from "@/components/ui/sheet";
 
 export default function Header() {
-  const {isSignedIn} = useUser();
-
   return (
     <nav className="flex justify-between items-center bg-black p-2 gap-2 fixed top-0 w-full z-500 h-18">
       <div className="flex gap-10 items-center">
@@ -90,29 +87,18 @@ export default function Header() {
           </SheetContent>
         </Sheet>
 
-        {isSignedIn ? (
-          <UserButton
-            appearance={{
-              elements: {
-                userButtonAvatarBox: "w-12! h-12!"
-              }
-            }}
-          >
-            <UserButton.MenuItems>
-              <UserButton.Link
-                label="Manage listings"
-                labelIcon={<Building size={16} />}
-                href="/my-listings"
-              />
-            </UserButton.MenuItems>
-          </UserButton>
-        ) : (
-          <Link href="/sign-in">
-            <Button variant="outline" className="text-black">
-              Login
-            </Button>
-          </Link>
-        )}
+        <Show
+          when="signed-in"
+          fallback={
+            <Link href="/sign-in">
+              <Button variant="outline" className="text-black">
+                Login
+              </Button>
+            </Link>
+          }
+        >
+          <UserMenu />
+        </Show>
       </div>
     </nav>
   );
